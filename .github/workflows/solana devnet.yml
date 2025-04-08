@@ -36,7 +36,41 @@ jobs:
         solana-keygen new --no-passphrase --force
         solana --version
 
-    - name: Execute daily airdrop and transfer
+    - name: Setting up path
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-        # Rest of your airdrop and transfer commands...
+        
+    - name: Execute daily airdrop and transfer
+      run: |
+        # Get current balance before airdrop
+        echo "Current balance before airdrop:"
+        solana balance
+        
+        # Request airdrop (with retry logic)
+        echo "Requesting airdrop..."
+        if ! solana airdrop 2; then
+          echo "First airdrop attempt failed, retrying in 30 seconds..."
+          sleep 30
+          solana airdrop 2 || { echo "Airdrop failed after retry"; exit 1; }
+        fi
+        
+        # Verify new balance
+        echo "Balance after airdrop:"
+        solana balance
+        
+        # Send SOL to recipient
+        echo "Sending 1.5 SOL to $RECIPIENT_ADDRESS"
+        solana transfer --from ~/.config/solana/id.json $RECIPIENT_ADDRESS 1.5 \
+          --allow-unfunded-recipient \
+          --fee-payer ~/.config/solana/id.json \
+          --url https://api.devnet.solana.com
+        
+        # Final balance check
+        echo "Final balance:"
+        solana balance
+
+    # Verification step
+    - name: Verify transaction
+      run: |
+        echo "Last transaction details:"
+        solana transaction-history --limit 1
