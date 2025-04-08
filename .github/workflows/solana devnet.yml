@@ -14,9 +14,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+      
+    # Cache Solana CLI installation
+    - name: Cache Solana CLI
+      id: cache-solana
+      uses: actions/cache@v3
+      with:
+        path: ~/.local/share/solana
+        key: solana-${{ runner.os }}
+        
     # Correct Solana CLI installation with PATH handling
     - name: Install Solana CLI
+      if: steps.cache-solana.outputs.cache-hit != 'true'
       run: |
         # Install Solana CLI
         sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
