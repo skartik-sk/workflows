@@ -15,11 +15,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Minimal Solana CLI installation
+    # Correct Solana CLI installation
     - name: Install Solana CLI
       run: |
-        curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | sh -s -- -v
+        sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
         echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+        solana --version
 
     # Configure Solana for devnet
     - name: Setup Solana config
@@ -35,9 +36,13 @@ jobs:
         echo "Current balance before airdrop:"
         solana balance
         
-        # Request airdrop
+        # Request airdrop (with retry logic)
         echo "Requesting airdrop..."
-        solana airdrop 2 || echo "Airdrop failed, retrying..." && sleep 30 && solana airdrop 2
+        if ! solana airdrop 2; then
+          echo "First airdrop attempt failed, retrying in 30 seconds..."
+          sleep 30
+          solana airdrop 2 || { echo "Airdrop failed after retry"; exit 1; }
+        fi
         
         # Verify new balance
         echo "Balance after airdrop:"
