@@ -1,69 +1,61 @@
-name: Solana Daily Setup and Test
+name: Solana Daily Airdrop
 
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at 00:00 UTC
   workflow_dispatch:      # Allow manual triggering
 
+env:
+  RECIPIENT_ADDRESS: "FzzJuBTvpLsi517P1ELMZ7HwtFWxB4JFoRw6myraFgdB"  # Replace with your actual devnet address
+
 jobs:
-  solana-setup:
+  solana-airdrop:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Step 1: Install Solana CLI
+    # Minimal Solana CLI installation
     - name: Install Solana CLI
       run: |
-        curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | bash -s -- -v
-        
-    # Step 2: Install system dependencies
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y \
-            build-essential \
-            pkg-config \
-            libudev-dev llvm libclang-dev \
-            protobuf-compiler libssl-dev
-
-    # Step 3: Install Rust
-    - name: Install Rust
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        echo "$HOME/.cargo/env" >> $GITHUB_ENV
-        source "$HOME/.cargo/env"
-        rustc --version
-
-    # Step 4: Install Anchor
-    - name: Install Anchor
-      run: |
-        sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+        curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | sh -s -- -v
         echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-        solana --version
 
-    # Step 5: Configure Solana
-    - name: Configure Solana
+    # Configure Solana for devnet
+    - name: Setup Solana config
       run: |
         solana config set --url devnet
         solana-keygen new --no-passphrase --force
-        solana airdrop 2
-
-    # Step 6: Test transaction
-    - name: Test transaction
-      run: |
-        # Replace with your actual recipient address
-        RECIPIENT="FzzJuBTvpLsi517P1ELMZ7HwtFWxB4JFoRw6myraFgdB"
-        solana transfer --from ~/.config/solana/id.json $RECIPIENT 1.5 \
-          --allow-unfunded-recipient \
-          --url https://api.devnet.solana.com \
-          --fee-payer ~/.config/solana/id.json
-
-    # Step 7: Verify setup
-    - name: Verify versions
-      run: |
-        echo "=== Versions ==="
-        rustc --version
-        cargo --version
         solana --version
-        anchor --version
+
+    # Airdrop and transfer
+    - name: Execute daily airdrop and transfer
+      run: |
+        # Get current balance before airdrop
+        echo "Current balance before airdrop:"
+        solana balance
+        
+        # Request airdrop
+        echo "Requesting airdrop..."
+        solana airdrop 2 || echo "Airdrop failed, retrying..." && sleep 30 && solana airdrop 2
+        
+        # Verify new balance
+        echo "Balance after airdrop:"
+        solana balance
+        
+        # Send SOL to recipient
+        echo "Sending 1.5 SOL to $RECIPIENT_ADDRESS"
+        solana transfer --from ~/.config/solana/id.json $RECIPIENT_ADDRESS 1.5 \
+          --allow-unfunded-recipient \
+          --fee-payer ~/.config/solana/id.json \
+          --url https://api.devnet.solana.com
+        
+        # Final balance check
+        echo "Final balance:"
+        solana balance
+
+    # Verification step
+    - name: Verify transaction
+      run: |
+        echo "Last transaction details:"
+        solana transaction-history --limit 1
