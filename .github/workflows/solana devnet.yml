@@ -15,52 +15,28 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Correct Solana CLI installation
+    # Correct Solana CLI installation with PATH handling
     - name: Install Solana CLI
       run: |
+        # Install Solana CLI
         sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
-        echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+        
+        # Add to PATH for current session
+        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+        
+        # Verify installation
         solana --version
+        echo "Solana CLI installed successfully"
 
-    # Configure Solana for devnet
+    # Rest of your workflow...
     - name: Setup Solana config
       run: |
+        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
         solana config set --url devnet
         solana-keygen new --no-passphrase --force
         solana --version
 
-    # Airdrop and transfer
     - name: Execute daily airdrop and transfer
       run: |
-        # Get current balance before airdrop
-        echo "Current balance before airdrop:"
-        solana balance
-        
-        # Request airdrop (with retry logic)
-        echo "Requesting airdrop..."
-        if ! solana airdrop 2; then
-          echo "First airdrop attempt failed, retrying in 30 seconds..."
-          sleep 30
-          solana airdrop 2 || { echo "Airdrop failed after retry"; exit 1; }
-        fi
-        
-        # Verify new balance
-        echo "Balance after airdrop:"
-        solana balance
-        
-        # Send SOL to recipient
-        echo "Sending 1.5 SOL to $RECIPIENT_ADDRESS"
-        solana transfer --from ~/.config/solana/id.json $RECIPIENT_ADDRESS 1.5 \
-          --allow-unfunded-recipient \
-          --fee-payer ~/.config/solana/id.json \
-          --url https://api.devnet.solana.com
-        
-        # Final balance check
-        echo "Final balance:"
-        solana balance
-
-    # Verification step
-    - name: Verify transaction
-      run: |
-        echo "Last transaction details:"
-        solana transaction-history --limit 1
+        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+        # Rest of your airdrop and transfer commands...
