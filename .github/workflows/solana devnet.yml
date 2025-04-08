@@ -35,11 +35,8 @@ jobs:
         solana config set --url devnet
         solana-keygen new --no-passphrase --force
         solana --version
+        solana airdrop 2 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
 
-    - name: Setting up path
-      run: |
-        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-        
     - name: Execute daily airdrop and transfer
       run: |
         # Get current balance before airdrop
