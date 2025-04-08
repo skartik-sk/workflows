@@ -35,7 +35,7 @@ jobs:
         solana config set --url devnet
         solana-keygen new --no-passphrase --force
         solana --version
-        solana airdrop 2 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
+        solana airdrop 5 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
         solana balance $RECIPIENT_ADDRESS
         echo "Last transaction details:"
         solana transaction-history --limit 1
