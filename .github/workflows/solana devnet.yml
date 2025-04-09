@@ -45,7 +45,7 @@ jobs:
         solana airdrop 2 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
         solana balance $RECIPIENT_ADDRESS
         echo "Last transaction details:"
-        solana transaction-history --limit 1
+        solana transaction-history $RECIPIENT_ADDRESS --limit 1
         
     - name: ending note
       run: |
