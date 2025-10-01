@@ -2,7 +2,7 @@ name: Solana Daily Airdrop
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Runs daily at 00:00 UTC
+    - cron: '0 */8 * * *'  # Runs daily at 00:00 UTC
   workflow_dispatch:      # Allow manual triggering
 
 env:
@@ -42,7 +42,7 @@ jobs:
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
         solana config set --url devnet
-        solana airdrop 2 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
+        solana airdrop 5 $RECIPIENT_ADDRESS --url https://api.devnet.solana.com
         solana balance $RECIPIENT_ADDRESS
         echo "Last transaction details:"
         solana transaction-history $RECIPIENT_ADDRESS --limit 1
