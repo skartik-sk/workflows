@@ -42,6 +42,7 @@ jobs:
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
         solana config set --url devnet
+        solana-keygen new -o /home/runner/.config/solana/id.json
         solana airdrop 2 
         solana transfer $RECIPIENT_ADDRESS
         solana balance $RECIPIENT_ADDRESS
