@@ -42,10 +42,10 @@ jobs:
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
         solana config set --url devnet
-        pwd
-        solana-keygen new -o $HOME/home/runner/.config/solana/id.json
+        cd ../../..
+        solana-keygen new -o /.config/solana/id.json
         solana airdrop 2 
-        solana transfer $RECIPIENT_ADDRESS
+        solana transfer $RECIPIENT_ADDRESS 2
         solana balance $RECIPIENT_ADDRESS
         echo "Last transaction details:"
         solana transaction-history $RECIPIENT_ADDRESS --limit 1
