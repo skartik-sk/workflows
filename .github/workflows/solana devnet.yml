@@ -45,11 +45,11 @@ jobs:
         cd ../../..
         pwd
         ls -a .config/solana
+        touch id.json
         cat .config/solana/id.json
-        cd ~/
+        solana-keygen grind --starts-with hi:1
+        solana-keygen new --no-bip39-passphrase -o .config/solana/id.json --force
         solana airdrop 2 
-        solana-keygen new
-        solana-keygen new -o .config/solana/id.json
         solana airdrop 2 
         solana transfer $RECIPIENT_ADDRESS 2
         solana balance $RECIPIENT_ADDRESS
