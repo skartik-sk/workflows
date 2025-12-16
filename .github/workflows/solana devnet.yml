@@ -2,11 +2,11 @@ name: Solana Daily Airdrop
 
 on:
   schedule:
-    - cron: '0 */5 * * *'  # Runs daily at 00:00 UTC
+    - cron: '0 0 */1 * *'  # Runs daily at 00:00 UTC
   workflow_dispatch:      # Allow manual triggering
 
 env:
-  RECIPIENT_ADDRESS: "FzzJuBTvpLsi517P1ELMZ7HwtFWxB4JFoRw6myraFgdB"  # Replace with your actual devnet address
+  RECIPIENT_ADDRESS: "CEBkdzPA514Le82JEEwMekrfJ55ZCajeoABZ2bJSpPL1"  # Replace with your actual devnet address
 
 jobs:
   solana-airdrop:

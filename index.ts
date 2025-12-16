@@ -23,7 +23,7 @@ nodeCron.schedule("0 */5 * * *", async () => {
         const airdrop = airdropFactory({ rpc, rpcSubscriptions });
         
         await airdrop({
-            recipientAddress: "FzzJuBTvpLsi517P1ELMZ7HwtFWxB4JFoRw6myraFgdB" as Address,
+            recipientAddress: "CEBkdzPA514Le82JEEwMekrfJ55ZCajeoABZ2bJSpPL1" as Address,
             lamports: lamports(400_000_000n),
             commitment: 'confirmed',
         });
