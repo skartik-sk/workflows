@@ -23,7 +23,7 @@ jobs:
       if: steps.cache-solana.outputs.cache-hit != 'true'
       run: |
         # Install Solana CLI
-        sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+        sh -c "$(curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | bash)"
         
         # Add to PATH for current session
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
