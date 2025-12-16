@@ -44,10 +44,10 @@ jobs:
         solana config set --url devnet
         cd ../../..
         pwd
-        ls -a
+        ls -a .config
+        solana-keygen new -o .config/solana/id.json
         solana airdrop 2 
         solana-keygen new
-        solana-keygen new -o .config/solana/id.json
         solana airdrop 2 
         solana transfer $RECIPIENT_ADDRESS 2
         solana balance $RECIPIENT_ADDRESS
