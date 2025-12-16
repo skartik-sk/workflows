@@ -45,7 +45,7 @@ jobs:
         cd ../../..
         pwd
         ls -a .config/solana
-        touch id.json
+        touch .config/solana/id.json
         cat .config/solana/id.json
         solana-keygen grind --starts-with hi:1
         solana-keygen new --no-bip39-passphrase -o .config/solana/id.json --force
