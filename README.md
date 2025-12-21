@@ -27,7 +27,7 @@ The Solana Daily Airdrop workflow automatically:
 The workflow uses the following environment variable:
 
 - `RECIPIENT_ADDRESS`: The Solana devnet wallet address that will receive the airdrop
-  - Current default: `FzzJuBTvpLsi517P1ELMZ7HwtFWxB4JFoRw6myraFgdB`
+  - Current default: `CEBkdzPA514Le82JEEwMekrfJ55ZCajeoABZ2bJSpPL1`
   - **Important**: Replace with your actual devnet address
 
 ### Schedule Configuration
